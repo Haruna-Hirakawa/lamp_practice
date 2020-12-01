@@ -215,6 +215,37 @@ function get_details($db, $order_id, $user_id = null){
   return fetch_all_query($db, $sql, $params);
 }
 
+function item_ranking($db){
+  $sql = "
+  SELECT 
+    details.item_id, 
+    items.name,
+    items.price,
+    items.image,
+    SUM(details.amount) AS total_amount
+
+  FROM
+    details
+
+  JOIN
+    items
+
+  ON
+    details.item_id = items.item_id
+
+  GROUP BY
+    details.item_id
+
+  ORDER BY 
+    SUM(details.amount) DESC
+
+  LIMIT
+    3
+  ";
+
+  return fetch_all_query($db,$sql);
+}
+
 // 非DB
 
 function is_open($item){
